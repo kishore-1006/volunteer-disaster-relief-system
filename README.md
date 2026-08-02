@@ -949,21 +949,3 @@ Java • Spring Boot • React • MySQL • Git • GitHub
 🚀 Developed with dedication by **Kishore**
 
 </div>
-
-## 🏗️ System Architecture
-
-<p align="center">
-  <img src="docs/images/system-architecture.png" width="900"/>
-</p>
-
-## 📘 UML Class Diagram
-
-<p align="center">
-  <img src="docs/images/uml-class-diagram.png" width="900"/>
-</p>
-
-## 🗄️ ER Diagram
-
-<p align="center">
-  <img src="docs/images/er-diagram.png" width="900"/>
-</p>
