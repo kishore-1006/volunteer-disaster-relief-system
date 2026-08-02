@@ -1,0 +1,16 @@
+#!/bin/sh
+# ----------------------------------------------------------------------------
+# Maven Start Up Batch script
+# ----------------------------------------------------------------------------
+
+# Provide a default location for Maven Wrapper JAR
+wrapper_jar="$0"
+wrapper_dir=`dirname "$wrapper_jar"`/.mvn/wrapper
+wrapper_jar="$wrapper_dir/maven-wrapper.jar"
+
+if [ ! -f "$wrapper_jar" ]; then
+    mkdir -p "$wrapper_dir"
+    curl -s -f -L -o "$wrapper_jar" "https://repo.maven.apache.org/maven2/org/apache/maven/wrapper/maven-wrapper/3.3.2/maven-wrapper-3.3.2.jar"
+fi
+
+exec java -classpath "$wrapper_jar" "-Dmaven.multiModuleProjectDirectory=$wrapper_dir/../.." org.apache.maven.wrapper.MavenWrapperMain "$@"
