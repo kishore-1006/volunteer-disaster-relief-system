@@ -16,593 +16,177 @@
 
 ---
 
-## 🌟 Project Overview
+# 📖 Overview
 
-The **Volunteer Disaster Relief System** is a modern full-stack web application developed to simplify disaster management by connecting **administrators**, **volunteers**, **donors**, **shelter coordinators**, and **affected people** through one centralized platform.
+The **Volunteer Disaster Relief System** is a full-stack web application developed using **Spring Boot**, **React.js**, and **MySQL** to simplify disaster response and relief coordination.
 
-This project enables organizations to coordinate rescue operations efficiently, manage volunteers, allocate shelters, monitor donations, and provide real-time disaster information.
+The system connects administrators, volunteers, donors, and affected communities through a centralized platform for efficient disaster management.
 
 ---
 
-## 🎯 Problem Statement
+# 🎯 Problem Statement
 
-Natural disasters often create communication gaps between volunteers, relief organizations, and affected communities. Traditional manual processes delay rescue operations and resource allocation.
+Traditional disaster management systems rely heavily on manual coordination, leading to delayed rescue operations, poor communication, and inefficient resource allocation.
 
-The Volunteer Disaster Relief System provides a digital platform to streamline disaster response by managing volunteers, shelters, donations, relief tasks, and disaster records in one secure application.
+This system provides a centralized digital platform to efficiently manage volunteers, disasters, shelters, donations, and relief tasks.
 
 ---
 
 # 🎯 Objectives
 
 - Improve disaster response efficiency
-- Digitize volunteer management
-- Manage shelters effectively
-- Allocate relief tasks quickly
-- Track donations transparently
-- Provide centralized disaster information
+- Digitalize volunteer management
+- Manage disaster information
+- Coordinate relief operations
+- Manage shelters
+- Track donations
 - Reduce paperwork
-- Improve coordination among all stakeholders
+- Increase transparency
 
 ---
 
 # ✨ Core Features
 
-## 👤 User Module
+### 👤 User Management
 
 - User Registration
 - Secure Login
-- JWT Authentication
 - Profile Management
-- Change Password
 - Role-Based Access
 
----
-
-## 🙋 Volunteer Module
+### 🙋 Volunteer Management
 
 - Volunteer Registration
 - Skill Management
-- Availability Status
-- Assign Relief Tasks
-- View Assigned Tasks
-- Volunteer Reports
+- Availability Tracking
+- Task Assignment
 
----
+### 🌪 Disaster Management
 
-## 🌪 Disaster Module
-
-- Add Disaster Information
+- Add Disaster
 - Update Disaster Status
-- Disaster Location
-- Disaster Severity
 - Disaster Reports
-- Emergency Notifications
+- Location Tracking
 
----
+### 🏠 Shelter Management
 
-## 🏠 Shelter Module
-
-- Register Shelter
+- Shelter Registration
 - Capacity Management
-- Shelter Availability
 - Occupancy Tracking
-- Shelter Allocation
 
----
-
-## 💰 Donation Module
+### 💰 Donation Management
 
 - Monetary Donations
 - Material Donations
-- Donation Tracking
 - Donation History
-- Donation Reports
+- Donation Tracking
 
----
-
-## 📋 Relief Task Module
+### 📋 Relief Task Management
 
 - Create Tasks
 - Assign Volunteers
-- Track Task Status
-- Update Task Progress
-- Completion Reports
+- Track Progress
+- Generate Reports
 
----
+### 📊 Admin Dashboard
 
-## 👨‍💼 Admin Dashboard
-
-- Dashboard Analytics
 - User Management
-- Volunteer Management
-- Disaster Management
-- Donation Monitoring
-- Shelter Monitoring
-- Reports & Analytics
+- Volunteer Monitoring
+- Disaster Monitoring
+- Donation Analytics
+- Reports
 
 ---
 
 # 🛠 Technology Stack
 
-| Category | Technologies |
-|----------|--------------|
-| Frontend | React.js, HTML5, CSS3, JavaScript, Bootstrap |
-| Backend | Java 21, Spring Boot, Spring Security, Spring Data JPA |
-| Database | MySQL |
+| Category | Technology |
+|-----------|------------|
+| Frontend | React.js, HTML5, CSS3, Bootstrap |
+| Backend | Java 21, Spring Boot |
+| Database | MySQL 8 |
+| Security | Spring Security, JWT |
 | Build Tool | Maven |
-| IDE | Visual Studio Code |
-| API Testing | Postman |
 | Version Control | Git & GitHub |
-
----
-
-# 📂 Project Modules
-
-✅ User Management
-
-✅ Volunteer Management
-
-✅ Disaster Management
-
-✅ Shelter Management
-
-✅ Donation Management
-
-✅ Task Management
-
-✅ Admin Dashboard
-
----
-
-# ⭐ Highlights
-
-- Modern REST API Architecture
-- Responsive UI
-- Secure Authentication
-- MySQL Database Integration
-- Clean Layered Architecture
-- Scalable Design
-- Easy Deployment
-- Academic Project Ready
+| API Testing | Postman |
 
 ---
 
 # 🏗 System Architecture
 
-```text
-                               +----------------------+
-                               |    Web Browser       |
-                               |   (React Frontend)   |
-                               +----------+-----------+
-                                          |
-                                          | HTTP / HTTPS
-                                          ▼
-                              +-------------------------+
-                              |    Spring Boot API      |
-                              |-------------------------|
-                              | Authentication          |
-                              | User Module             |
-                              | Volunteer Module        |
-                              | Disaster Module         |
-                              | Shelter Module          |
-                              | Donation Module         |
-                              | Task Module             |
-                              +-----------+-------------+
-                                          |
-                             Spring Data JPA / Hibernate
-                                          |
-                                          ▼
-                              +-------------------------+
-                              |     MySQL Database      |
-                              +-------------------------+
-```
+> *(Insert System Architecture Image Here)*
 
 ---
 
 # 📘 UML Class Diagram
 
-```text
-+--------------------------------------------------+
-|                     User                         |
-+--------------------------------------------------+
-| - userId : Long                                 |
-| - fullName : String                             |
-| - email : String                                |
-| - password : String                             |
-| - phone : String                                |
-| - role : String                                 |
-+--------------------------------------------------+
-
-                    1
-                    |
-                    | has
-                    |
-                    *
-+--------------------------------------------------+
-|                  Volunteer                      |
-+--------------------------------------------------+
-| - volunteerId : Long                            |
-| - skills : String                               |
-| - availability : Boolean                        |
-| - location : String                             |
-+--------------------------------------------------+
-
-                    |
-                    | assigned
-                    |
-                    *
-+--------------------------------------------------+
-|                     Task                         |
-+--------------------------------------------------+
-| - taskId : Long                                 |
-| - title : String                                |
-| - description : String                          |
-| - status : String                               |
-| - assignedDate : Date                           |
-+--------------------------------------------------+
-
-                    ^
-                    |
-                    |
-                    |
-+--------------------------------------------------+
-|                  Disaster                        |
-+--------------------------------------------------+
-| - disasterId : Long                             |
-| - title : String                                |
-| - location : String                             |
-| - type : String                                 |
-| - severity : String                             |
-| - status : String                               |
-+--------------------------------------------------+
-
-                    |
-                    |
-                    |
-        +-----------+------------+
-        |                        |
-        ▼                        ▼
-
-+--------------------+    +--------------------+
-|      Shelter       |    |     Donation       |
-+--------------------+    +--------------------+
-| shelterId          |    | donationId         |
-| name               |    | amount             |
-| address            |    | donorName          |
-| capacity           |    | donationType       |
-+--------------------+    +--------------------+
-```
+> *(Insert UML Class Diagram Image Here)*
 
 ---
 
 # 🗄 ER Diagram
 
-```text
-USER
---------------------------
-PK user_id
-name
-email
-password
-phone
-role
-          |
-          |1
-          |
-          |------< VOLUNTEER
-                  PK volunteer_id
-                  skills
-                  availability
-                  location
-                  FK user_id
-
-VOLUNTEER
-        |
-        |1
-        |
-        |------< TASK
-                PK task_id
-                title
-                description
-                status
-                FK volunteer_id
-                FK disaster_id
-
-DISASTER
--------------------------
-PK disaster_id
-title
-location
-type
-severity
-status
-
-DISASTER
-      |
-      |1
-      |
-      |------< SHELTER
-      |        PK shelter_id
-      |        name
-      |        address
-      |        capacity
-      |
-      |------< DONATION
-               PK donation_id
-               donor_name
-               amount
-               donation_type
-               FK disaster_id
-```
+> *(Insert ER Diagram Image Here)*
 
 ---
 
 # 👥 Use Case Diagram
 
-```text
-                    +-------------------+
-                    |      Admin        |
-                    +---------+---------+
-                              |
-         --------------------------------------------
-         |         |         |         |            |
-         ▼         ▼         ▼         ▼            ▼
- Manage Users  Manage   Manage     Manage      View Reports
-               Disaster Volunteers Donations
-
-                    +-------------------+
-                    |    Volunteer      |
-                    +---------+---------+
-                              |
-                ----------------------------
-                |             |            |
-                ▼             ▼            ▼
-          Update Profile  View Tasks  Update Status
-
-                    +-------------------+
-                    |      Donor        |
-                    +---------+---------+
-                              |
-                      ----------------
-                      |              |
-                      ▼              ▼
-               Donate Money    Donate Items
-```
+> *(Insert Use Case Diagram Image Here)*
 
 ---
 
 # 🔄 Sequence Diagram
 
-```text
-User
- |
- | Login
- ▼
-Frontend
- |
- | API Request
- ▼
-Spring Boot
- |
- | Validate User
- ▼
-Database
- |
- | User Found
- ▼
-Spring Boot
- |
- | JWT Token
- ▼
-Frontend
- |
- | Dashboard
- ▼
-User
-```
+> *(Insert Sequence Diagram Image Here)*
 
 ---
 
 # 📈 Activity Diagram
 
-```text
-Start
-   |
-   ▼
-User Login
-   |
-   ▼
-Authentication
-   |
-   ├── Invalid Credentials
-   |        |
-   |        ▼
-   |    Show Error
-   |
-   ▼
-Login Success
-   |
-   ▼
-Dashboard
-   |
-   ▼
-Select Module
-   |
-   ├── Volunteer
-   ├── Disaster
-   ├── Shelter
-   ├── Donation
-   └── Task
-   |
-   ▼
-Save Data
-   |
-   ▼
-Database Updated
-   |
-   ▼
-End
-```
-
----
-
-# 🔄 Project Workflow
-
-```text
-User Registration
-        │
-        ▼
-User Login
-        │
-        ▼
-Dashboard
-        │
-        ▼
-Manage Disaster Information
-        │
-        ▼
-Register Volunteers
-        │
-        ▼
-Assign Relief Tasks
-        │
-        ▼
-Manage Shelters
-        │
-        ▼
-Track Donations
-        │
-        ▼
-Generate Reports
-        │
-        ▼
-Logout
-```
+> *(Insert Activity Diagram Image Here)*
 
 ---
 
 # 🗃 Database Tables
 
-| Table | Description |
-|--------|-------------|
-| Users | Stores all user information |
-| Volunteers | Volunteer details |
-| Disasters | Disaster records |
-| Shelters | Shelter information |
-| Donations | Donation records |
-| Tasks | Relief task assignments |
+- Users
+- Volunteers
+- Disasters
+- Shelters
+- Donations
+- Tasks
 
 ---
 
-# 🔑 Database Relationships
+# 📡 REST API Modules
 
-- One User ➜ One Volunteer Profile
-- One Disaster ➜ Many Shelters
-- One Disaster ➜ Many Donations
-- One Volunteer ➜ Many Tasks
-- One Disaster ➜ Many Tasks
-
----
-
-# 📡 REST API Endpoints
-
-## Authentication
-
-| Method | Endpoint |
-|----------|----------------------|
-| POST | /api/auth/register |
-| POST | /api/auth/login |
-| POST | /api/auth/logout |
-
----
-
-## User APIs
-
-| Method | Endpoint |
-|----------|----------------|
-| GET | /api/users |
-| GET | /api/users/{id} |
-| PUT | /api/users/{id} |
-| DELETE | /api/users/{id} |
-
----
-
-## Volunteer APIs
-
-| Method | Endpoint |
-|----------|--------------------------|
-| GET | /api/volunteers |
-| POST | /api/volunteers |
-| PUT | /api/volunteers/{id} |
-| DELETE | /api/volunteers/{id} |
-
----
-
-## Disaster APIs
-
-| Method | Endpoint |
-|----------|------------------------|
-| GET | /api/disasters |
-| POST | /api/disasters |
-| PUT | /api/disasters/{id} |
-| DELETE | /api/disasters/{id} |
-
----
-
-## Shelter APIs
-
-| Method | Endpoint |
-|----------|----------------------|
-| GET | /api/shelters |
-| POST | /api/shelters |
-| PUT | /api/shelters/{id} |
-| DELETE | /api/shelters/{id} |
-
----
-
-## Donation APIs
-
-| Method | Endpoint |
-|----------|----------------------|
-| GET | /api/donations |
-| POST | /api/donations |
-| PUT | /api/donations/{id} |
-| DELETE | /api/donations/{id} |
-
----
-
-## Task APIs
-
-| Method | Endpoint |
-|----------|----------------|
-| GET | /api/tasks |
-| POST | /api/tasks |
-| PUT | /api/tasks/{id} |
-| DELETE | /api/tasks/{id} |
+- Authentication API
+- User API
+- Volunteer API
+- Disaster API
+- Shelter API
+- Donation API
+- Task API
 
 ---
 
 # 🚀 Installation Guide
 
-## 1️⃣ Clone Repository
+## Clone Repository
 
 ```bash
 git clone https://github.com/kishore-1006/volunteer-disaster-relief-system.git
 ```
 
----
-
-## 2️⃣ Backend Setup
+## Backend
 
 ```bash
 cd backend
-mvn clean install
 mvn spring-boot:run
 ```
 
----
-
-## 3️⃣ Frontend Setup
+## Frontend
 
 ```bash
 cd frontend
@@ -612,282 +196,45 @@ npm run dev
 
 ---
 
-## 4️⃣ Database Setup
+# 📸 Screenshots
 
-```sql
-CREATE DATABASE volunteer_disaster_relief;
-```
-
-Update `application.properties`:
-
-```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/volunteer_disaster_relief
-spring.datasource.username=root
-spring.datasource.password=your_password
-```
-
----
-
-# ⚙ Configuration
-
-Backend Port
-
-```
-8080
-```
-
-Frontend Port
-
-```
-5173
-```
-
-Database
-
-```
-MySQL 8.0
-```
-
-Java Version
-
-```
-Java 21
-```
-
-Spring Boot
-
-```
-3.x
-```
-
----
-
-# 🧪 Testing Tools
-
-- ✅ Postman
-- ✅ MySQL Workbench
-- ✅ Chrome DevTools
-- ✅ JUnit
-- ✅ Mockito
-
----
-
-# ☁ Deployment (Future)
-
-- AWS EC2
-- Docker
-- Railway
-- Render
-- Vercel
-- Netlify
-
----
-
-# 📸 Project Screenshots
-
-> Screenshots will be updated after project implementation.
-
-## 🔐 Login Page
-
-<p align="center">
-<img src="docs/images/login.png" width="900">
-</p>
-
----
-
-## 📊 Admin Dashboard
-
-<p align="center">
-<img src="docs/images/dashboard.png" width="900">
-</p>
-
----
-
-## 🙋 Volunteer Management
-
-<p align="center">
-<img src="docs/images/volunteer.png" width="900">
-</p>
-
----
-
-## 🌪 Disaster Management
-
-<p align="center">
-<img src="docs/images/disaster.png" width="900">
-</p>
-
----
-
-## 🏠 Shelter Management
-
-<p align="center">
-<img src="docs/images/shelter.png" width="900">
-</p>
-
----
-
-## 💰 Donation Management
-
-<p align="center">
-<img src="docs/images/donation.png" width="900">
-</p>
-
----
-
-# 📚 Project Documentation
-
-This project includes the following documentation:
-
-- ✅ Software Requirements Specification (SRS)
-- ✅ Software Design Document (SDD)
-- ✅ UML Class Diagram
-- ✅ ER Diagram
-- ✅ Use Case Diagram
-- ✅ Sequence Diagram
-- ✅ Activity Diagram
-- ✅ System Architecture
-- ✅ Database Schema
-- ✅ REST API Documentation
-- ✅ User Manual
-- ✅ Installation Guide
-
----
-
-# 📈 Project Progress
-
-| Module | Status |
-|----------|--------|
-| Project Setup | ✅ Completed |
-| Backend Development | 🚧 In Progress |
-| Frontend Development | 🚧 In Progress |
-| Database Design | 🚧 In Progress |
-| REST API | ⏳ Pending |
-| Authentication | ⏳ Pending |
-| Deployment | ⏳ Pending |
-| Documentation | 🚧 In Progress |
+> Screenshots will be added after project completion.
 
 ---
 
 # 🚀 Future Enhancements
 
-- 🤖 AI-based Disaster Prediction
-- 📍 Live Volunteer GPS Tracking
-- 📱 Android Mobile Application
-- ☁ Cloud Deployment (AWS)
-- 📧 Email Notifications
-- 📲 SMS Alerts
-- 🗺 Interactive GIS Maps
-- 📊 Advanced Analytics Dashboard
-- 🌐 Multi-language Support
-- 🔔 Real-time Notifications
-- 📦 Inventory Management
-- 🤝 NGO Collaboration Portal
-
----
-
-# 🔒 Security Features
-
-- JWT Authentication
-- Password Encryption
-- Role-Based Authorization
-- Secure REST APIs
-- Input Validation
-- Exception Handling
-- SQL Injection Prevention
-- CORS Configuration
-
----
-
-# 📋 Software Requirements
-
-## Hardware
-
-- Processor : Intel i3 or Above
-- RAM : 8 GB Recommended
-- Storage : 20 GB Free Space
-
-## Software
-
-- Java 21
-- Spring Boot 3.x
-- React.js
-- MySQL 8
-- Maven
-- Git
-- Visual Studio Code
-- MySQL Workbench
-- Postman
-
----
-
-# 🤝 Contribution
-
-Contributions are welcome!
-
-1. Fork the repository
-2. Create a new branch
-3. Commit your changes
-4. Push your branch
-5. Create a Pull Request
+- AI-based Disaster Prediction
+- Live GPS Tracking
+- Android Application
+- Cloud Deployment
+- Email Notifications
+- SMS Alerts
+- GIS Map Integration
+- Advanced Analytics Dashboard
 
 ---
 
 # 👨‍💻 Developer
 
-## **Kishore**
+**Kishore**
 
 Bachelor of Engineering (Computer Science)
 
-### Skills
-
-- Java
-- Spring Boot
-- React.js
-- MySQL
-- REST API
-- Git & GitHub
-
-GitHub
-
-https://github.com/kishore-1006
+GitHub: **https://github.com/kishore-1006**
 
 ---
 
 # 📄 License
 
-This project is developed for educational and academic purposes.
-
----
-
-# 🙏 Acknowledgements
-
-Special thanks to
-
-- Faculty Members
-- Open Source Community
-- Spring Boot Team
-- React Team
-- MySQL Team
+This project is developed for academic and educational purposes only.
 
 ---
 
 <div align="center">
 
-# ⭐ If you like this project, don't forget to Star this Repository ⭐
+## ⭐ If you found this project useful, don't forget to Star the Repository!
 
----
-
-## ❤️ Made with Passion using
-
-Java • Spring Boot • React • MySQL • Git • GitHub
-
----
-
-### 🌍 Volunteer Disaster Relief System
-
-**Helping Communities Through Technology**
-
-🚀 Developed with dedication by **Kishore**
+**Made with ❤️ using Spring Boot • React • MySQL**
 
 </div>
