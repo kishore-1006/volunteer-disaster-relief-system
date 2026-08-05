@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useNavigate } from 'react me-auto';
+import { Link, useNavigate } from 'react-router-dom';
 import { ShieldAlert, Bell, LogOut, User as UserIcon, Home, Info, PhoneCall, LayoutDashboard } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
@@ -37,9 +37,13 @@ const Navbar = () => {
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link fw-medium text-secondary d-flex align-items-center gap-1 px-3" to="/about">
-                <Info size={17} /> About Us
-              </Link>
+              <button
+                type="button"
+                className="nav-link btn btn-link fw-medium text-secondary d-flex align-items-center gap-1 px-3 border-0 bg-transparent"
+                onClick={() => navigate("/")}
+              >
+                <Home size={17} /> Home
+              </button>
             </li>
             <li className="nav-item">
               <Link className="nav-link fw-medium text-secondary d-flex align-items-center gap-1 px-3" to="/contact">
