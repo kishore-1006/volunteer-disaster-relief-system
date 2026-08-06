@@ -37,13 +37,9 @@ const Navbar = () => {
               </Link>
             </li>
             <li className="nav-item">
-              <button
-                type="button"
-                className="nav-link btn btn-link fw-medium text-secondary d-flex align-items-center gap-1 px-3 border-0 bg-transparent"
-                onClick={() => navigate("/")}
-              >
-                <Home size={17} /> Home
-              </button>
+              <Link className="nav-link fw-medium text-secondary d-flex align-items-center gap-1 px-3" to="/about">
+                <Info size={17} /> About
+              </Link>
             </li>
             <li className="nav-item">
               <Link className="nav-link fw-medium text-secondary d-flex align-items-center gap-1 px-3" to="/contact">
