@@ -14,11 +14,11 @@ import {
 const Sidebar = () => {
   const navItems = [
     { label: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
-    { label: 'Disaster Incidents', path: '/disasters', icon: Flame },
-    { label: 'Volunteer Roster', path: '/volunteers', icon: Users },
-    { label: 'Shelters & Camps', path: '/shelters', icon: Home },
-    { label: 'Donations & Supplies', path: '/donations', icon: HeartHandshake },
-    { label: 'Relief Dispatch Tasks', path: '/relief-tasks', icon: CheckSquare },
+    { label: 'Disaster Incidents', path: '/disaster', icon: Flame },
+    { label: 'Volunteer Roster', path: '/volunteer', icon: Users },
+    { label: 'Shelters & Camps', path: '/shelter', icon: Home },
+    { label: 'Donations & Supplies', path: '/donation', icon: HeartHandshake },
+    { label: 'Relief Dispatch Tasks', path: '/dashboard', icon: CheckSquare },
     { label: 'My Profile', path: '/profile', icon: User },
   ];
 

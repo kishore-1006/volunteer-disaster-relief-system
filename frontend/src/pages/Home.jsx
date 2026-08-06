@@ -13,37 +13,43 @@ function Home() {
       icon: Flame,
       title: 'Disaster Monitoring',
       description: 'Track and manage active disaster incidents with severity levels, status updates and real-time reporting.',
-      color: 'bg-danger-subtle text-danger'
+      color: 'bg-danger-subtle text-danger',
+      link: '/disaster'
     },
     {
       icon: Users,
       title: 'Volunteer Deployment',
       description: 'Register, assign, and track skilled volunteers with availability status and field experience.',
-      color: 'bg-primary-subtle text-primary'
+      color: 'bg-primary-subtle text-primary',
+      link: '/volunteer'
     },
     {
       icon: HomeIcon,
       title: 'Shelter Management',
       description: 'Monitor shelter capacity, occupancy, and status across evacuation camps in real-time.',
-      color: 'bg-warning-subtle text-warning'
+      color: 'bg-warning-subtle text-warning',
+      link: '/shelter'
     },
     {
       icon: HeartHandshake,
       title: 'Donation Tracking',
       description: 'Record and trace monetary, medical, and food donations with full transparency.',
-      color: 'bg-success-subtle text-success'
+      color: 'bg-success-subtle text-success',
+      link: '/donation'
     },
     {
       icon: CheckSquare,
       title: 'Relief Task Dispatch',
       description: 'Create and assign critical relief tasks to volunteers with progress tracking.',
-      color: 'bg-info-subtle text-info'
+      color: 'bg-info-subtle text-info',
+      link: '/dashboard'
     },
     {
       icon: BarChart3,
       title: 'Analytics Dashboard',
       description: 'Comprehensive overview with stat cards, charts, and activity feeds for data-driven decisions.',
-      color: 'bg-secondary-subtle text-secondary'
+      color: 'bg-secondary-subtle text-secondary',
+      link: '/dashboard'
     }
   ];
 
@@ -179,13 +185,15 @@ function Home() {
               const Icon = feature.icon;
               return (
                 <div key={idx} className="col-md-6 col-lg-4">
-                  <div className="feature-card h-100">
-                    <div className={`feature-icon-wrap ${feature.color}`}>
-                      <Icon size={26} />
+                  <Link to={feature.link} className="text-decoration-none d-block h-100">
+                    <div className="feature-card h-100">
+                      <div className={`feature-icon-wrap ${feature.color}`}>
+                        <Icon size={26} />
+                      </div>
+                      <h5 className="font-heading fw-bold text-dark mb-2">{feature.title}</h5>
+                      <p className="text-muted mb-0 small">{feature.description}</p>
                     </div>
-                    <h5 className="font-heading fw-bold text-dark mb-2">{feature.title}</h5>
-                    <p className="text-muted mb-0 small">{feature.description}</p>
-                  </div>
+                  </Link>
                 </div>
               );
             })}

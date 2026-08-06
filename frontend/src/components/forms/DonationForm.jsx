@@ -9,6 +9,7 @@ const DonationForm = ({ initialValues, onSubmit, onCancel }) => {
     amountOrQuantity: 0,
     disasterId: disasters.length > 0 ? disasters[0].id : '',
   });
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     if (initialValues) {
@@ -19,10 +20,27 @@ const DonationForm = ({ initialValues, onSubmit, onCancel }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: null }));
+    }
+  };
+
+  const validate = () => {
+    const newErrors = {};
+    if (!formData.donorName.trim()) {
+      newErrors.donorName = 'Donor name or organization is required.';
+    }
+    const val = parseFloat(formData.amountOrQuantity);
+    if (isNaN(val) || val <= 0) {
+      newErrors.amountOrQuantity = 'Please enter a valid amount or quantity greater than 0.';
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!validate()) return;
     onSubmit({
       ...formData,
       amountOrQuantity: parseFloat(formData.amountOrQuantity) || 0,
@@ -31,18 +49,19 @@ const DonationForm = ({ initialValues, onSubmit, onCancel }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} noValidate>
       <div className="mb-3">
         <label className="form-label fw-semibold">Donor Name / Organization *</label>
         <input
           type="text"
           name="donorName"
-          className="form-control"
+          className={`form-control ${errors.donorName ? 'is-invalid' : ''}`}
           placeholder="e.g. Apex Tech Relief Foundation"
           value={formData.donorName}
           onChange={handleChange}
           required
         />
+        {errors.donorName && <div className="invalid-feedback d-block">{errors.donorName}</div>}
       </div>
 
       <div className="row g-3 mb-3">
@@ -68,13 +87,14 @@ const DonationForm = ({ initialValues, onSubmit, onCancel }) => {
           <input
             type="number"
             name="amountOrQuantity"
-            className="form-control"
+            className={`form-control ${errors.amountOrQuantity ? 'is-invalid' : ''}`}
             min="1"
             placeholder={formData.donationType === 'MONEY' ? '500000' : '100'}
             value={formData.amountOrQuantity}
             onChange={handleChange}
             required
           />
+          {errors.amountOrQuantity && <div className="invalid-feedback d-block">{errors.amountOrQuantity}</div>}
         </div>
       </div>
 

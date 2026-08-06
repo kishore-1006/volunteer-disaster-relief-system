@@ -37,10 +37,10 @@ const Footer = () => {
           <div className="col-lg-3 col-md-6">
             <h6 className="fw-bold mb-3 text-light font-heading">Relief Operations</h6>
             <ul className="list-unstyled small d-flex flex-column gap-2 text-secondary">
-              <li><Link to="/disasters" className="text-decoration-none text-secondary">Incident Monitoring</Link></li>
-              <li><Link to="/volunteers" className="text-decoration-none text-secondary">Volunteer Registration</Link></li>
-              <li><Link to="/shelters" className="text-decoration-none text-secondary">Evacuation Shelters</Link></li>
-              <li><Link to="/donations" className="text-decoration-none text-secondary">Transparent Supplies</Link></li>
+              <li><Link to="/disaster" className="text-decoration-none text-secondary">Incident Monitoring</Link></li>
+              <li><Link to="/volunteer" className="text-decoration-none text-secondary">Volunteer Registration</Link></li>
+              <li><Link to="/shelter" className="text-decoration-none text-secondary">Evacuation Shelters</Link></li>
+              <li><Link to="/donation" className="text-decoration-none text-secondary">Transparent Supplies</Link></li>
             </ul>
           </div>
 

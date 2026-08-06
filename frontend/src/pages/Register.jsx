@@ -16,14 +16,47 @@ function Register() {
     location: '',
     skills: '',
   });
+  const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: null }));
+    }
+  };
+
+  const validate = () => {
+    const newErrors = {};
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneRegex = /^[+]?[(]?[0-9]{1,4}[)]?[-\s./0-9]{7,15}$/;
+
+    if (!formData.name.trim()) {
+      newErrors.name = 'Full name is required.';
+    }
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email address is required.';
+    } else if (!emailRegex.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email address.';
+    }
+    if (!formData.phoneNumber.trim()) {
+      newErrors.phoneNumber = 'Phone number is required.';
+    } else if (!phoneRegex.test(formData.phoneNumber) || formData.phoneNumber.replace(/\D/g, '').length < 10) {
+      newErrors.phoneNumber = 'Please enter a valid phone number (at least 10 digits).';
+    }
+    if (!formData.password) {
+      newErrors.password = 'Password is required.';
+    } else if (formData.password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters long.';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!validate()) return;
     setIsLoading(true);
     setTimeout(() => {
       addVolunteer({
@@ -109,7 +142,7 @@ function Register() {
           <h3 className="font-heading fw-bold text-dark mb-1">Create Account</h3>
           <p className="text-muted mb-4">Register as a volunteer to join disaster relief operations</p>
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} noValidate>
             <div className="row g-3 mb-3">
               <div className="col-md-6">
                 <label className="form-label fw-semibold text-dark small">Full Name *</label>
@@ -118,12 +151,13 @@ function Register() {
                   <input
                     type="text"
                     name="name"
-                    className="form-control auth-input ps-5"
+                    className={`form-control auth-input ps-5 ${errors.name ? 'is-invalid' : ''}`}
                     placeholder="Dr. Rajesh Sharma"
                     value={formData.name}
                     onChange={handleChange}
                     required
                   />
+                  {errors.name && <div className="invalid-feedback d-block">{errors.name}</div>}
                 </div>
               </div>
               <div className="col-md-6">
@@ -133,12 +167,13 @@ function Register() {
                   <input
                     type="email"
                     name="email"
-                    className="form-control auth-input ps-5"
+                    className={`form-control auth-input ps-5 ${errors.email ? 'is-invalid' : ''}`}
                     placeholder="volunteer@relief.org"
                     value={formData.email}
                     onChange={handleChange}
                     required
                   />
+                  {errors.email && <div className="invalid-feedback d-block">{errors.email}</div>}
                 </div>
               </div>
             </div>
@@ -151,12 +186,13 @@ function Register() {
                   <input
                     type="text"
                     name="phoneNumber"
-                    className="form-control auth-input ps-5"
+                    className={`form-control auth-input ps-5 ${errors.phoneNumber ? 'is-invalid' : ''}`}
                     placeholder="+91 98765 43210"
                     value={formData.phoneNumber}
                     onChange={handleChange}
                     required
                   />
+                  {errors.phoneNumber && <div className="invalid-feedback d-block">{errors.phoneNumber}</div>}
                 </div>
               </div>
               <div className="col-md-6">
@@ -197,7 +233,7 @@ function Register() {
                 <input
                   type={showPassword ? 'text' : 'password'}
                   name="password"
-                  className="form-control auth-input ps-5 pe-5"
+                  className={`form-control auth-input ps-5 pe-5 ${errors.password ? 'is-invalid' : ''}`}
                   placeholder="Create a secure password"
                   value={formData.password}
                   onChange={handleChange}
@@ -211,6 +247,7 @@ function Register() {
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
+                {errors.password && <div className="invalid-feedback d-block">{errors.password}</div>}
               </div>
             </div>
 

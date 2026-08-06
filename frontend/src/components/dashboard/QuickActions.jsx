@@ -8,28 +8,28 @@ const QuickActions = () => {
   const actions = [
     {
       title: 'Report Disaster',
-      path: '/disasters',
+      path: '/disaster',
       icon: Flame,
       btnClass: 'btn-outline-danger',
       desc: 'Log critical emergency incident'
     },
     {
       title: 'Register Volunteer',
-      path: '/volunteers',
+      path: '/volunteer',
       icon: UserPlus,
       btnClass: 'btn-outline-primary',
       desc: 'Add new responder to roster'
     },
     {
       title: 'Record Donation',
-      path: '/donations',
+      path: '/donation',
       icon: HeartHandshake,
       btnClass: 'btn-outline-success',
       desc: 'Log incoming relief funds or goods'
     },
     {
       title: 'Dispatch Relief Task',
-      path: '/relief-tasks',
+      path: '/dashboard',
       icon: CheckSquare,
       btnClass: 'btn-outline-warning text-dark',
       desc: 'Assign urgent field task'

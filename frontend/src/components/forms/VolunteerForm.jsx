@@ -10,6 +10,7 @@ const VolunteerForm = ({ initialValues, onSubmit, onCancel }) => {
     location: '',
     experienceYears: 1
   });
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     if (initialValues) {
@@ -20,10 +21,37 @@ const VolunteerForm = ({ initialValues, onSubmit, onCancel }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: null }));
+    }
+  };
+
+  const validate = () => {
+    const newErrors = {};
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneRegex = /^[+]?[(]?[0-9]{1,4}[)]?[-\s./0-9]{7,15}$/;
+
+    if (!formData.name.trim()) {
+      newErrors.name = 'Full name is required.';
+    }
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email address is required.';
+    } else if (!emailRegex.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email address.';
+    }
+    if (!formData.phoneNumber.trim()) {
+      newErrors.phoneNumber = 'Phone number is required.';
+    } else if (!phoneRegex.test(formData.phoneNumber) || formData.phoneNumber.replace(/\D/g, '').length < 10) {
+      newErrors.phoneNumber = 'Please enter a valid phone number (at least 10 digits).';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!validate()) return;
     onSubmit({
       ...formData,
       experienceYears: parseInt(formData.experienceYears, 10) || 0
@@ -31,31 +59,33 @@ const VolunteerForm = ({ initialValues, onSubmit, onCancel }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} noValidate>
       <div className="row g-3 mb-3">
         <div className="col-md-6">
           <label className="form-label fw-semibold">Full Name *</label>
           <input
             type="text"
             name="name"
-            className="form-control"
+            className={`form-control ${errors.name ? 'is-invalid' : ''}`}
             placeholder="e.g. Dr. Rajesh Sharma"
             value={formData.name}
             onChange={handleChange}
             required
           />
+          {errors.name && <div className="invalid-feedback d-block">{errors.name}</div>}
         </div>
         <div className="col-md-6">
           <label className="form-label fw-semibold">Email Address *</label>
           <input
             type="email"
             name="email"
-            className="form-control"
+            className={`form-control ${errors.email ? 'is-invalid' : ''}`}
             placeholder="volunteer@relief.org"
             value={formData.email}
             onChange={handleChange}
             required
           />
+          {errors.email && <div className="invalid-feedback d-block">{errors.email}</div>}
         </div>
       </div>
 
@@ -65,12 +95,13 @@ const VolunteerForm = ({ initialValues, onSubmit, onCancel }) => {
           <input
             type="text"
             name="phoneNumber"
-            className="form-control"
+            className={`form-control ${errors.phoneNumber ? 'is-invalid' : ''}`}
             placeholder="+91 98765 43210"
             value={formData.phoneNumber}
             onChange={handleChange}
             required
           />
+          {errors.phoneNumber && <div className="invalid-feedback d-block">{errors.phoneNumber}</div>}
         </div>
         <div className="col-md-6">
           <label className="form-label fw-semibold">Location / Base City</label>

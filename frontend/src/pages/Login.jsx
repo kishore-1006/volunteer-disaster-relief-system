@@ -10,9 +10,28 @@ function Login() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState({});
+
+  const validate = () => {
+    const newErrors = {};
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email.trim()) {
+      newErrors.email = 'Email address is required.';
+    } else if (!emailRegex.test(email)) {
+      newErrors.email = 'Please enter a valid email address.';
+    }
+    if (!password) {
+      newErrors.password = 'Password is required.';
+    } else if (password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters long.';
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!validate()) return;
     setIsLoading(true);
     setTimeout(() => {
       login(email, password);
@@ -89,19 +108,23 @@ function Login() {
           <h3 className="font-heading fw-bold text-dark mb-1">Sign In</h3>
           <p className="text-muted mb-4">Enter your credentials to access the command center</p>
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} noValidate>
             <div className="mb-3">
               <label className="form-label fw-semibold text-dark small">Email Address</label>
               <div className="position-relative">
                 <Mail size={18} className="position-absolute top-50 start-0 translate-middle-y ms-3 text-muted" />
                 <input
                   type="email"
-                  className="form-control auth-input ps-5"
+                  className={`form-control auth-input ps-5 ${errors.email ? 'is-invalid' : ''}`}
                   placeholder="coordinator@reliefshield.org"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (errors.email) setErrors((prev) => ({ ...prev, email: null }));
+                  }}
                   required
                 />
+                {errors.email && <div className="invalid-feedback d-block">{errors.email}</div>}
               </div>
             </div>
 
@@ -111,10 +134,13 @@ function Login() {
                 <Lock size={18} className="position-absolute top-50 start-0 translate-middle-y ms-3 text-muted" />
                 <input
                   type={showPassword ? 'text' : 'password'}
-                  className="form-control auth-input ps-5 pe-5"
+                  className={`form-control auth-input ps-5 pe-5 ${errors.password ? 'is-invalid' : ''}`}
                   placeholder="Enter your password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    if (errors.password) setErrors((prev) => ({ ...prev, password: null }));
+                  }}
                   required
                 />
                 <button
@@ -125,6 +151,7 @@ function Login() {
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
+                {errors.password && <div className="invalid-feedback d-block">{errors.password}</div>}
               </div>
             </div>
 
