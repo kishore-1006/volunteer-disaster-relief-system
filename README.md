@@ -173,10 +173,6 @@ This repository includes comprehensive, academic-grade project diagrams generate
 - 🏗️ **[System Architecture](docs/diagrams/system_architecture.png)** ([Mermaid Source](docs/diagrams/system_architecture.mmd))
 - 📘 **[UML Class Diagram](docs/diagrams/uml_class_diagram.png)** ([Mermaid Source](docs/diagrams/uml_class_diagram.mmd))
 - 🗄️ **[ER Diagram](docs/diagrams/er_diagram.png)** ([Mermaid Source](docs/diagrams/er_diagram.mmd))
-- 👥 **[Use Case Diagram](docs/diagrams/use_case_diagram.png)** ([Mermaid Source](docs/diagrams/use_case_diagram.mmd))
-- 🔄 **[Login Authentication Sequence Diagram](docs/diagrams/login_sequence_diagram.png)** ([Mermaid Source](docs/diagrams/login_sequence_diagram.mmd))
-- 📈 **[Disaster Relief Activity Diagram](docs/diagrams/activity_diagram.png)** ([Mermaid Source](docs/diagrams/activity_diagram.mmd))
-
 ---
 
 ## 1. 🏗️ System Architecture Diagram
