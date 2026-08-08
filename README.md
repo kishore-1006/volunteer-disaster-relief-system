@@ -209,36 +209,6 @@ Database schema diagram using Crow's Foot notation based on JPA entities (`users
 
 ---
 
-## 4. 👥 Use Case Diagram
-
-UML Use Case Diagram mapping system actors (**Admin**, **Volunteer**, **User / Donor**) to verified application features and interactions.
-
-<p align="center">
-  <img src="docs/diagrams/use_case_diagram.png" alt="Use Case Diagram" width="950" />
-</p>
-
----
-
-## 5. 🔄 Login Authentication Sequence Diagram
-
-End-to-end authentication flow diagram detailing user login, credential verification against MySQL DB, JWT token generation, `localStorage` storage, and Bearer token attachment on subsequent protected API requests.
-
-<p align="center">
-  <img src="docs/diagrams/login_sequence_diagram.png" alt="Login Authentication Sequence Diagram" width="950" />
-</p>
-
----
-
-## 6. 📈 Activity Diagram — Disaster Relief Workflow
-
-Activity diagram depicting the operational lifecycle of disaster management, volunteer deployment, shelter allocation, task dispatching, donation tracking, progress monitoring, and reporting.
-
-<p align="center">
-  <img src="docs/diagrams/activity_diagram.png" alt="Disaster Relief Activity Diagram" width="950" />
-</p>
-
----
-
 # 🔄 Project Workflow
 
 ```text
@@ -272,60 +242,6 @@ Generate Reports
 Logout
 ```
 
----
-
-# 📸 Project Screenshots
-
-> Screenshots will be updated after project implementation.
-
-## 🔐 Login Page
-
-<p align="center">
-<img src="docs/images/login.png" width="900">
-</p>
-
----
-
-## 📊 Admin Dashboard
-
-<p align="center">
-<img src="docs/images/dashboard.png" width="900">
-</p>
-
----
-
-## 🙋 Volunteer Management
-
-<p align="center">
-<img src="docs/images/volunteer.png" width="900">
-</p>
-
----
-
-## 🌪 Disaster Management
-
-<p align="center">
-<img src="docs/images/disaster.png" width="900">
-</p>
-
----
-
-## 🏠 Shelter Management
-
-<p align="center">
-<img src="docs/images/shelter.png" width="900">
-</p>
-
----
-
-## 💰 Donation Management
-
-<p align="center">
-<img src="docs/images/donation.png" width="900">
-</p>
-
----
-
 # 📚 Project Documentation
 
 This project includes the following documentation:
@@ -345,20 +261,6 @@ This project includes the following documentation:
 
 ---
 
-# 📈 Project Progress
-
-| Module | Status |
-|----------|--------|
-| Project Setup | ✅ Completed |
-| Backend Development | 🚧 In Progress |
-| Frontend Development | 🚧 In Progress |
-| Database Design | 🚧 In Progress |
-| REST API | ⏳ Pending |
-| Authentication | ⏳ Pending |
-| Deployment | ⏳ Pending |
-| Documentation | 🚧 In Progress |
-
----
 
 # 🚀 Future Enhancements
 
@@ -449,31 +351,6 @@ https://github.com/kishore-1006
 
 This project is developed for educational and academic purposes.
 
----
-
-# 🙏 Acknowledgements
-
-Special thanks to
-
-- Faculty Members
-- Open Source Community
-- Spring Boot Team
-- React Team
-- MySQL Team
-
----
-
-<div align="center">
-
-# ⭐ If you like this project, don't forget to Star this Repository ⭐
-
----
-
-## ❤️ Made with Passion using
-
-Java • Spring Boot • React • MySQL • Git • GitHub
-
----
 
 ### 🌍 Volunteer Disaster Relief System
 
