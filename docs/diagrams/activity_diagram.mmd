@@ -1,0 +1,56 @@
+stateDiagram-v2
+    [*] --> Start
+    Start --> UserLoginRegister: Access Application Portal
+
+    state UserLoginRegister {
+        [*] --> EnterCredentials
+        EnterCredentials --> Authenticate: Submit Login/Register
+        Authenticate --> AuthSuccess: Valid Credentials
+        Authenticate --> AuthFailed: Invalid Credentials
+        AuthFailed --> EnterCredentials: Show Error Notification
+    }
+
+    AuthSuccess --> StoreToken: Save Token & User to localStorage
+    StoreToken --> AdminDashboard: Navigate to Command Center (/dashboard)
+
+    state OperationsManagement {
+        [*] --> DashboardOverview
+
+        state "Disaster Operations" as DisasterOp {
+            ReportDisaster --> SelectSeverity: Title, Description, Location
+            SelectSeverity --> SaveDisaster: Set Status (ACTIVE / RESOLVED)
+        }
+
+        state "Volunteer Coordination" as VolunteerOp {
+            RegisterVolunteer --> SetSkills: Skills, Experience, Location
+            SetSkills --> UpdateAvailability: Set (AVAILABLE / DEPLOYED)
+        }
+
+        state "Task Allocation" as TaskOp {
+            CreateReliefTask --> AssignVolunteer: Link to Disaster & Volunteer
+            AssignVolunteer --> UpdateTaskStatus: Set (PENDING / IN_PROGRESS / COMPLETED)
+        }
+
+        state "Shelter Management" as ShelterOp {
+            RegisterShelter --> UpdateOccupancy: Location, Capacity, Contact
+            UpdateOccupancy --> CheckCapacity: Set Status (OPEN / FULL / CLOSED)
+        }
+
+        state "Donation Tracking" as DonationOp {
+            RecordDonation --> LinkDisaster: Donor Name, Type, Quantity
+            LinkDisaster --> UpdateAuditTrail: Log Transaction
+        }
+
+        DashboardOverview --> DisasterOp: Manage Disasters
+        DashboardOverview --> VolunteerOp: Manage Volunteers
+        DashboardOverview --> TaskOp: Assign Relief Tasks
+        DashboardOverview --> ShelterOp: Manage Shelters
+        DashboardOverview --> DonationOp: Track Donations
+    }
+
+    AdminDashboard --> OperationsManagement: Select Operational Module
+    OperationsManagement --> SyncDatabase: Save & Sync via Context/REST API
+    SyncDatabase --> AnalyticsReports: Real-time Dashboard Analytics Updated
+    AnalyticsReports --> UserLogout: Complete Relief Operations
+    UserLogout --> ClearSession: Clear localStorage Token
+    ClearSession --> [*]: System Exit

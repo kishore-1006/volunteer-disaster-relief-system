@@ -1,0 +1,45 @@
+graph LR
+    Admin["👨‍💼 Admin"]
+    Volunteer["🙋 Volunteer"]
+    Donor["👤 User / Donor"]
+
+    subgraph SystemBoundary ["Volunteer Disaster Relief System"]
+        UC1(("UC1: Register Account"))
+        UC2(("UC2: Login & Authenticate"))
+        UC3(("UC3: View Dashboard Analytics"))
+        UC4(("UC4: Manage Disasters"))
+        UC5(("UC5: Manage Volunteers"))
+        UC6(("UC6: Manage Shelters"))
+        UC7(("UC7: Manage Donations"))
+        UC8(("UC8: Assign Relief Tasks"))
+        UC9(("UC9: Update Task Status"))
+        UC10(("UC10: Manage Profile"))
+        UC11(("UC11: View About & Contact"))
+    end
+
+    Admin --> UC2
+    Admin --> UC3
+    Admin --> UC4
+    Admin --> UC5
+    Admin --> UC6
+    Admin --> UC7
+    Admin --> UC8
+    Admin --> UC10
+
+    Volunteer --> UC1
+    Volunteer --> UC2
+    Volunteer --> UC3
+    Volunteer --> UC5
+    Volunteer --> UC9
+    Volunteer --> UC10
+
+    Donor --> UC1
+    Donor --> UC2
+    Donor --> UC7
+    Donor --> UC10
+    Donor --> UC11
+
+    classDef actor fill:#e1f5fe,stroke:#0288d1,stroke-width:2px;
+    classDef usecase fill:#fff8e1,stroke:#ffa000,stroke-width:2px;
+    class Admin,Volunteer,Donor actor;
+    class UC1,UC2,UC3,UC4,UC5,UC6,UC7,UC8,UC9,UC10,UC11 usecase;

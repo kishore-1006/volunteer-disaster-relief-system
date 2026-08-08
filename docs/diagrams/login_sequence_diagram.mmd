@@ -1,0 +1,48 @@
+sequenceDiagram
+    autonumber
+    actor User as 👤 User / Coordinator
+    participant LoginPage as 📱 Login Page (Login.jsx)
+    participant AppContext as ⚛️ AppContext / State
+    participant AxiosService as 🌐 Axios API Client (api.js)
+    participant AuthController as ☕ UserController / AuthController
+    participant UserService as ⚙️ UserServiceImpl
+    participant UserRepo as 🗄️ UserRepository
+    participant Database as 🐬 MySQL Database
+    participant LocalStorage as 💾 Browser localStorage
+
+    User->>LoginPage: 1. Inputs Email & Password and Clicks "Sign In"
+    LoginPage->>AppContext: 2. Calls login(email, password)
+    AppContext->>AxiosService: 3. Calls authService.login(credentials)
+    AxiosService->>AuthController: 4. POST /api/auth/login (HTTP Payload)
+    AuthController->>UserService: 5. validateUser(email, password)
+    UserService->>UserRepo: 6. findByEmail(email)
+    UserRepo->>Database: 7. SELECT * FROM users WHERE email = ?
+    Database-->>UserRepo: 8. Returns User Record (Hashed Password, Role)
+    UserRepo-->>UserService: 9. User Entity
+
+    alt Invalid Credentials
+        UserService-->>AuthController: 10a. Invalid Credentials Exception
+        AuthController-->>AxiosService: 11a. HTTP 401 Unauthorized Response
+        AxiosService-->>AppContext: 12a. Interceptor catches Error
+        AppContext->>LoginPage: 13a. Trigger showToast("Invalid credentials", "error")
+        LoginPage-->>User: 14a. Display Error Alert Message
+    else Successful Authentication
+        UserService->>UserService: 10b. Verify Password & Generate JWT Token
+        UserService-->>AuthController: 11b. AuthResponse (JWT Token + User DTO)
+        AuthController-->>AxiosService: 12b. HTTP 200 OK (JWT Token Payload)
+        AxiosService-->>AppContext: 13b. Return User Data & JWT Token
+        AppContext->>LocalStorage: 14b. setItem('token', 'mock-jwt-token') & setItem('user', JSON)
+        AppContext->>LoginPage: 15b. Update State (isAuthenticated=true, user)
+        LoginPage->>User: 16b. Show Toast ("Welcome back") & Redirect to /dashboard
+    end
+
+    opt Subsequent Protected API Request (e.g. Fetch Disasters)
+        User->>LoginPage: 17. Access Protected Page (/dashboard)
+        LoginPage->>AxiosService: 18. Calls disasterService.getAll()
+        AxiosService->>LocalStorage: 19. getItem('token')
+        LocalStorage-->>AxiosService: 20. Returns 'Bearer <jwt-token>'
+        AxiosService->>AuthController: 21. GET /api/disasters (Header: Authorization: Bearer <token>)
+        AuthController->>AuthController: 22. SecurityConfig / JWT Filter validates Token & Grant Access
+        AuthController-->>AxiosService: 23. HTTP 200 OK (Disaster Data)
+        AxiosService-->>LoginPage: 24. Render Data on UI
+    end

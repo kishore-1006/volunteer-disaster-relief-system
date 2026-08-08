@@ -1,0 +1,83 @@
+graph TB
+    subgraph ClientLayer ["Client Layer (Web Browser)"]
+        UI["User / Admin Interface"]
+        ReactApp["React 19 Frontend App<br/>(React Router v6 & AppContext)"]
+        AxiosClient["Axios HTTP Service<br/>(interceptors.request: Bearer JWT)"]
+        LocalStorage["Browser localStorage<br/>('token', 'user', 'vdr_*')"]
+        UI --> ReactApp
+        ReactApp <--> LocalStorage
+        ReactApp --> AxiosClient
+    end
+
+    AxiosClient -- "HTTPS / REST API Requests (JSON)" --> SecurityFilter
+
+    subgraph SecurityLayer ["Security & Authentication Layer"]
+        SecurityConfig["SecurityConfig<br/>(HttpSecurity permitAll / JWT Filter)"]
+        SecurityFilter["Spring Security Filter Chain"]
+        SecurityFilter --> SecurityConfig
+    end
+
+    SecurityFilter -- "Authorized Requests" --> ControllerLayer
+
+    subgraph ControllerLayer ["Spring Boot Controller Layer (REST Controllers)"]
+        UC["UserController<br/>(/api/users)"]
+        VC["VolunteerController<br/>(/api/volunteers)"]
+        DC["DisasterController<br/>(/api/disasters)"]
+        SC["ShelterController<br/>(/api/shelters)"]
+        DNC["DonationController<br/>(/api/donations)"]
+        TC["TaskController<br/>(/api/tasks)"]
+    end
+
+    subgraph ServiceLayer ["Service & Business Logic Layer"]
+        US["UserServiceImpl"]
+        VS["VolunteerServiceImpl"]
+        DS["DisasterServiceImpl"]
+        SS["ShelterServiceImpl"]
+        DNS["DonationServiceImpl"]
+        TS["TaskServiceImpl"]
+        UC --> US
+        VC --> VS
+        DC --> DS
+        SC --> SS
+        DNC --> DNS
+        TC --> TS
+    end
+
+    subgraph DataAccessLayer ["Spring Data JPA Repository Layer"]
+        UR["UserRepository"]
+        VR["VolunteerRepository"]
+        DR["DisasterRepository"]
+        SR["ShelterRepository"]
+        DNR["DonationRepository"]
+        TR["TaskRepository"]
+        US --> UR
+        VS --> VR
+        DS --> DR
+        SS --> SR
+        DNS --> DNR
+        TS --> TR
+    end
+
+    subgraph DatabaseLayer ["Database Layer"]
+        MySQL[("MySQL 8 Database<br/>(volunteer_disaster_relief_db)")]
+        UR --> MySQL
+        VR --> MySQL
+        DR --> MySQL
+        SR --> MySQL
+        DNR --> MySQL
+        TR --> MySQL
+    end
+
+    classDef client fill:#e3f2fd,stroke:#1565c0,stroke-width:2px;
+    classDef security fill:#fff3e0,stroke:#e65100,stroke-width:2px;
+    classDef controller fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px;
+    classDef service fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px;
+    classDef repository fill:#fffde7,stroke:#f57f17,stroke-width:2px;
+    classDef db fill:#ffebee,stroke:#c62828,stroke-width:2px;
+
+    class UI,ReactApp,AxiosClient,LocalStorage client;
+    class SecurityConfig,SecurityFilter security;
+    class UC,VC,DC,SC,DNC,TC controller;
+    class US,VS,DS,SS,DNS,TS service;
+    class UR,VR,DR,SR,DNR,TR repository;
+    class MySQL db;

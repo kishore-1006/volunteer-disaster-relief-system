@@ -1,0 +1,94 @@
+classDiagram
+    class User {
+        -Long id
+        -String name
+        -String email
+        -String password
+        -String role
+        -String phoneNumber
+        -LocalDateTime createdAt
+        +getId() Long
+        +getName() String
+        +getEmail() String
+        +getRole() String
+        +onCreate() void
+    }
+
+    class Volunteer {
+        -Long id
+        -String name
+        -String email
+        -String phoneNumber
+        -String skills
+        -String availabilityStatus
+        -String location
+        -Integer experienceYears
+        +getId() Long
+        +getName() String
+        +getSkills() String
+        +getAvailabilityStatus() String
+    }
+
+    class Disaster {
+        -Long id
+        -String title
+        -String description
+        -String location
+        -String severityLevel
+        -String status
+        -LocalDateTime reportedAt
+        +getId() Long
+        +getTitle() String
+        +getSeverityLevel() String
+        +getStatus() String
+        +onCreate() void
+    }
+
+    class Shelter {
+        -Long id
+        -String name
+        -String location
+        -Integer capacity
+        -Integer currentOccupancy
+        -String contactNumber
+        -String status
+        +getId() Long
+        +getName() String
+        +getCapacity() Integer
+        +getCurrentOccupancy() Integer
+    }
+
+    class Donation {
+        -Long id
+        -String donorName
+        -String donationType
+        -Double amountOrQuantity
+        -Long disasterId
+        -LocalDateTime donatedAt
+        +getId() Long
+        +getDonorName() String
+        +getAmountOrQuantity() Double
+        +getDisasterId() Long
+        +onCreate() void
+    }
+
+    class Task {
+        -Long id
+        -String title
+        -String description
+        -String status
+        -Long assignedVolunteerId
+        -Long disasterId
+        -LocalDateTime createdAt
+        +getId() Long
+        +getTitle() String
+        +getStatus() String
+        +getAssignedVolunteerId() Long
+        +getDisasterId() Long
+        +onCreate() void
+    }
+
+    User "0..1" -- "0..1" Volunteer : registers_as
+    Volunteer "1" -- "0..*" Task : assigned_to (assignedVolunteerId)
+    Disaster "1" -- "0..*" Task : associated_with (disasterId)
+    Disaster "1" -- "0..*" Donation : receives (disasterId)

@@ -165,283 +165,77 @@ The Volunteer Disaster Relief System provides a digital platform to streamline d
 - Easy Deployment
 - Academic Project Ready
 
----
-# 🏗 System Architecture
+# 📐 System Documentation
 
-```text
-                               +----------------------+
-                               |    Web Browser       |
-                               |   (React Frontend)   |
-                               +----------+-----------+
-                                          |
-                                          | HTTP / HTTPS
-                                          ▼
-                              +-------------------------+
-                              |    Spring Boot API      |
-                              |-------------------------|
-                              | Authentication          |
-                              | User Module             |
-                              | Volunteer Module        |
-                              | Disaster Module         |
-                              | Shelter Module          |
-                              | Donation Module         |
-                              | Task Module             |
-                              +-----------+-------------+
-                                          |
-                             Spring Data JPA / Hibernate
-                                          |
-                                          ▼
-                              +-------------------------+
-                              |     MySQL Database      |
-                              +-------------------------+
-```
+This repository includes comprehensive, academic-grade project diagrams generated directly from the source code implementation (Spring Boot backend entities, controllers, services, repositories, JPA database schema, and React frontend context/routes).
+
+### 📑 Quick Links to Diagram Documents
+- 🏗️ **[System Architecture](docs/diagrams/system_architecture.png)** ([Mermaid Source](docs/diagrams/system_architecture.mmd))
+- 📘 **[UML Class Diagram](docs/diagrams/uml_class_diagram.png)** ([Mermaid Source](docs/diagrams/uml_class_diagram.mmd))
+- 🗄️ **[ER Diagram](docs/diagrams/er_diagram.png)** ([Mermaid Source](docs/diagrams/er_diagram.mmd))
+- 👥 **[Use Case Diagram](docs/diagrams/use_case_diagram.png)** ([Mermaid Source](docs/diagrams/use_case_diagram.mmd))
+- 🔄 **[Login Authentication Sequence Diagram](docs/diagrams/login_sequence_diagram.png)** ([Mermaid Source](docs/diagrams/login_sequence_diagram.mmd))
+- 📈 **[Disaster Relief Activity Diagram](docs/diagrams/activity_diagram.png)** ([Mermaid Source](docs/diagrams/activity_diagram.mmd))
 
 ---
 
-# 📘 UML Class Diagram
+## 1. 🏗️ System Architecture Diagram
 
-```text
-+--------------------------------------------------+
-|                     User                         |
-+--------------------------------------------------+
-| - userId : Long                                 |
-| - fullName : String                             |
-| - email : String                                |
-| - password : String                             |
-| - phone : String                                |
-| - role : String                                 |
-+--------------------------------------------------+
+High-level multi-tiered layered architecture diagram illustrating the React 19 Client Layer, Spring Security & JWT Authentication Filter, Spring Boot Controllers, Service Layer, Spring Data JPA Repositories, and MySQL Database.
 
-                    1
-                    |
-                    | has
-                    |
-                    *
-+--------------------------------------------------+
-|                  Volunteer                      |
-+--------------------------------------------------+
-| - volunteerId : Long                            |
-| - skills : String                               |
-| - availability : Boolean                        |
-| - location : String                             |
-+--------------------------------------------------+
-
-                    |
-                    | assigned
-                    |
-                    *
-+--------------------------------------------------+
-|                     Task                         |
-+--------------------------------------------------+
-| - taskId : Long                                 |
-| - title : String                                |
-| - description : String                          |
-| - status : String                               |
-| - assignedDate : Date                           |
-+--------------------------------------------------+
-
-                    ^
-                    |
-                    |
-                    |
-+--------------------------------------------------+
-|                  Disaster                        |
-+--------------------------------------------------+
-| - disasterId : Long                             |
-| - title : String                                |
-| - location : String                             |
-| - type : String                                 |
-| - severity : String                             |
-| - status : String                               |
-+--------------------------------------------------+
-
-                    |
-                    |
-                    |
-        +-----------+------------+
-        |                        |
-        ▼                        ▼
-
-+--------------------+    +--------------------+
-|      Shelter       |    |     Donation       |
-+--------------------+    +--------------------+
-| shelterId          |    | donationId         |
-| name               |    | amount             |
-| address            |    | donorName          |
-| capacity           |    | donationType       |
-+--------------------+    +--------------------+
-```
+<p align="center">
+  <img src="docs/diagrams/system_architecture.png" alt="System Architecture Diagram" width="950" />
+</p>
 
 ---
 
-# 🗄 ER Diagram
+## 2. 📘 UML Class Diagram
 
-```text
-USER
---------------------------
-PK user_id
-name
-email
-password
-phone
-role
-          |
-          |1
-          |
-          |------< VOLUNTEER
-                  PK volunteer_id
-                  skills
-                  availability
-                  location
-                  FK user_id
+Detailed UML Class Diagram derived directly from Java entity classes (`User`, `Volunteer`, `Disaster`, `Shelter`, `Donation`, `Task`), showing exact attributes, data types, primary keys, foreign keys, methods, and relationships.
 
-VOLUNTEER
-        |
-        |1
-        |
-        |------< TASK
-                PK task_id
-                title
-                description
-                status
-                FK volunteer_id
-                FK disaster_id
-
-DISASTER
--------------------------
-PK disaster_id
-title
-location
-type
-severity
-status
-
-DISASTER
-      |
-      |1
-      |
-      |------< SHELTER
-      |        PK shelter_id
-      |        name
-      |        address
-      |        capacity
-      |
-      |------< DONATION
-               PK donation_id
-               donor_name
-               amount
-               donation_type
-               FK disaster_id
-```
+<p align="center">
+  <img src="docs/diagrams/uml_class_diagram.png" alt="UML Class Diagram" width="950" />
+</p>
 
 ---
 
-# 👥 Use Case Diagram
+## 3. 🗄️ ER Diagram (Entity-Relationship)
 
-```text
-                    +-------------------+
-                    |      Admin        |
-                    +---------+---------+
-                              |
-         --------------------------------------------
-         |         |         |         |            |
-         ▼         ▼         ▼         ▼            ▼
- Manage Users  Manage   Manage     Manage      View Reports
-               Disaster Volunteers Donations
+Database schema diagram using Crow's Foot notation based on JPA entities (`users`, `volunteers`, `disasters`, `shelters`, `donations`, `tasks`) and foreign key relationships.
 
-                    +-------------------+
-                    |    Volunteer      |
-                    +---------+---------+
-                              |
-                ----------------------------
-                |             |            |
-                ▼             ▼            ▼
-          Update Profile  View Tasks  Update Status
-
-                    +-------------------+
-                    |      Donor        |
-                    +---------+---------+
-                              |
-                      ----------------
-                      |              |
-                      ▼              ▼
-               Donate Money    Donate Items
-```
+<p align="center">
+  <img src="docs/diagrams/er_diagram.png" alt="Entity Relationship Diagram" width="950" />
+</p>
 
 ---
 
-# 🔄 Sequence Diagram
+## 4. 👥 Use Case Diagram
 
-```text
-User
- |
- | Login
- ▼
-Frontend
- |
- | API Request
- ▼
-Spring Boot
- |
- | Validate User
- ▼
-Database
- |
- | User Found
- ▼
-Spring Boot
- |
- | JWT Token
- ▼
-Frontend
- |
- | Dashboard
- ▼
-User
-```
+UML Use Case Diagram mapping system actors (**Admin**, **Volunteer**, **User / Donor**) to verified application features and interactions.
+
+<p align="center">
+  <img src="docs/diagrams/use_case_diagram.png" alt="Use Case Diagram" width="950" />
+</p>
 
 ---
 
-# 📈 Activity Diagram
+## 5. 🔄 Login Authentication Sequence Diagram
 
-```text
-Start
-   |
-   ▼
-User Login
-   |
-   ▼
-Authentication
-   |
-   ├── Invalid Credentials
-   |        |
-   |        ▼
-   |    Show Error
-   |
-   ▼
-Login Success
-   |
-   ▼
-Dashboard
-   |
-   ▼
-Select Module
-   |
-   ├── Volunteer
-   ├── Disaster
-   ├── Shelter
-   ├── Donation
-   └── Task
-   |
-   ▼
-Save Data
-   |
-   ▼
-Database Updated
-   |
-   ▼
-End
-```
+End-to-end authentication flow diagram detailing user login, credential verification against MySQL DB, JWT token generation, `localStorage` storage, and Bearer token attachment on subsequent protected API requests.
+
+<p align="center">
+  <img src="docs/diagrams/login_sequence_diagram.png" alt="Login Authentication Sequence Diagram" width="950" />
+</p>
+
+---
+
+## 6. 📈 Activity Diagram — Disaster Relief Workflow
+
+Activity diagram depicting the operational lifecycle of disaster management, volunteer deployment, shelter allocation, task dispatching, donation tracking, progress monitoring, and reporting.
+
+<p align="center">
+  <img src="docs/diagrams/activity_diagram.png" alt="Disaster Relief Activity Diagram" width="950" />
+</p>
 
 ---
 

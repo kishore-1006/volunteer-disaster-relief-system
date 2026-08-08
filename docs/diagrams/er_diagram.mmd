@@ -1,0 +1,64 @@
+erDiagram
+    users {
+        bigint id PK
+        varchar name
+        varchar email UK
+        varchar password
+        varchar role
+        varchar phone_number
+        datetime created_at
+    }
+
+    volunteers {
+        bigint id PK
+        varchar name
+        varchar email
+        varchar phone_number
+        varchar skills
+        varchar availability_status
+        varchar location
+        int experience_years
+    }
+
+    disasters {
+        bigint id PK
+        varchar title
+        varchar description
+        varchar location
+        varchar severity_level
+        varchar status
+        datetime reported_at
+    }
+
+    shelters {
+        bigint id PK
+        varchar name
+        varchar location
+        int capacity
+        int current_occupancy
+        varchar contact_number
+        varchar status
+    }
+
+    donations {
+        bigint id PK
+        varchar donor_name
+        varchar donation_type
+        double amount_or_quantity
+        bigint disaster_id FK
+        datetime donated_at
+    }
+
+    tasks {
+        bigint id PK
+        varchar title
+        varchar description
+        varchar status
+        bigint assigned_volunteer_id FK
+        bigint disaster_id FK
+        datetime created_at
+    }
+
+    disasters ||--o{ donations : "receives"
+    disasters ||--o{ tasks : "requires"
+    volunteers ||--o{ tasks : "performs"
