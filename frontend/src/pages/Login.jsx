@@ -1,16 +1,26 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ShieldAlert, Mail, Lock, LogIn, Users, HeartHandshake, Flame, Eye, EyeOff } from 'lucide-react';
+import { ShieldAlert, Mail, Lock, LogIn, Users, HeartHandshake, Flame, Eye, EyeOff, KeyRound } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import Modal from '../components/ui/Modal';
 
 function Login() {
-  const { login } = useApp();
+  const { login, forgotPassword, resetPassword } = useApp();
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
+
+  // Forgot Password State
+  const [isForgotModalOpen, setIsForgotModalOpen] = useState(false);
+  const [forgotStep, setForgotStep] = useState(1); // 1 = request token, 2 = reset password
+  const [resetEmail, setResetEmail] = useState('');
+  const [resetTokenInput, setResetTokenInput] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [isForgotLoading, setIsForgotLoading] = useState(false);
+  const [forgotError, setForgotError] = useState('');
 
   const validate = () => {
     const newErrors = {};
@@ -29,15 +39,71 @@ function Login() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
     setIsLoading(true);
-    setTimeout(() => {
-      login(email, password);
-      setIsLoading(false);
+    const result = await login(email, password);
+    setIsLoading(false);
+    if (result && result.success) {
       navigate('/dashboard');
-    }, 600);
+    }
+  };
+
+  const handleOpenForgotModal = (e) => {
+    e.preventDefault();
+    setResetEmail(email || '');
+    setResetTokenInput('');
+    setNewPassword('');
+    setForgotError('');
+    setForgotStep(1);
+    setIsForgotModalOpen(true);
+  };
+
+  const handleRequestToken = async (e) => {
+    e.preventDefault();
+    if (!resetEmail.trim()) {
+      setForgotError('Please enter your email address.');
+      return;
+    }
+    setIsForgotLoading(true);
+    setForgotError('');
+    const res = await forgotPassword(resetEmail);
+    setIsForgotLoading(false);
+    if (res && res.success) {
+      if (res.resetToken) {
+        setResetTokenInput(res.resetToken);
+      }
+      setForgotStep(2);
+    } else if (res && res.message) {
+      setForgotError(res.message);
+    }
+  };
+
+  const handleConfirmReset = async (e) => {
+    e.preventDefault();
+    if (!resetTokenInput.trim()) {
+      setForgotError('Please enter the reset token.');
+      return;
+    }
+    if (!newPassword || newPassword.length < 6) {
+      setForgotError('New password must be at least 6 characters long.');
+      return;
+    }
+    setIsForgotLoading(true);
+    setForgotError('');
+    const res = await resetPassword({
+      email: resetEmail,
+      token: resetTokenInput,
+      newPassword: newPassword,
+    });
+    setIsForgotLoading(false);
+    if (res && res.success) {
+      setIsForgotModalOpen(false);
+      setEmail(resetEmail);
+    } else if (res && res.message) {
+      setForgotError(res.message);
+    }
   };
 
   return (
@@ -160,7 +226,13 @@ function Login() {
                 <input type="checkbox" className="form-check-input" id="rememberMe" />
                 <label className="form-check-label small text-muted" htmlFor="rememberMe">Remember me</label>
               </div>
-              <Link to="#" className="small fw-semibold text-primary text-decoration-none">Forgot password?</Link>
+              <button
+                type="button"
+                className="btn btn-link p-0 small fw-semibold text-primary text-decoration-none"
+                onClick={handleOpenForgotModal}
+              >
+                Forgot password?
+              </button>
             </div>
 
             <button
@@ -194,11 +266,123 @@ function Login() {
           <div className="mt-4 p-3 rounded-3 bg-light border text-center">
             <p className="text-muted small mb-1 fw-medium">Demo Access</p>
             <p className="text-muted small mb-0" style={{ fontSize: '0.78rem' }}>
-              Enter any email and password to access the dashboard
+              Enter your registered email and password to access the command center
             </p>
           </div>
         </div>
       </div>
+
+      {/* Forgot Password Modal */}
+      <Modal
+        isOpen={isForgotModalOpen}
+        onClose={() => setIsForgotModalOpen(false)}
+        title={forgotStep === 1 ? "Forgot Password" : "Reset Your Password"}
+      >
+        {forgotStep === 1 ? (
+          <form onSubmit={handleRequestToken}>
+            <p className="text-muted small mb-3">
+              Enter your registered email address and we will generate a secure password reset token.
+            </p>
+
+            {forgotError && (
+              <div className="alert alert-danger py-2 px-3 small rounded-3 mb-3">
+                {forgotError}
+              </div>
+            )}
+
+            <div className="mb-4">
+              <label className="form-label fw-semibold text-dark small">Email Address</label>
+              <div className="position-relative">
+                <Mail size={18} className="position-absolute top-50 start-0 translate-middle-y ms-3 text-muted" />
+                <input
+                  type="email"
+                  className="form-control auth-input ps-5"
+                  placeholder="volunteer@relief.org"
+                  value={resetEmail}
+                  onChange={(e) => setResetEmail(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="d-flex justify-content-end gap-2">
+              <button
+                type="button"
+                className="btn btn-outline-secondary rounded-pill px-4"
+                onClick={() => setIsForgotModalOpen(false)}
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="btn btn-primary rounded-pill px-4 fw-semibold"
+                disabled={isForgotLoading}
+              >
+                {isForgotLoading ? 'Generating...' : 'Get Reset Token'}
+              </button>
+            </div>
+          </form>
+        ) : (
+          <form onSubmit={handleConfirmReset}>
+            <p className="text-muted small mb-3">
+              Enter the reset token generated for <strong>{resetEmail}</strong> and create your new password.
+            </p>
+
+            {forgotError && (
+              <div className="alert alert-danger py-2 px-3 small rounded-3 mb-3">
+                {forgotError}
+              </div>
+            )}
+
+            <div className="mb-3">
+              <label className="form-label fw-semibold text-dark small">Reset Token</label>
+              <div className="position-relative">
+                <KeyRound size={18} className="position-absolute top-50 start-0 translate-middle-y ms-3 text-muted" />
+                <input
+                  type="text"
+                  className="form-control auth-input ps-5"
+                  placeholder="e.g. 8A3F12C0"
+                  value={resetTokenInput}
+                  onChange={(e) => setResetTokenInput(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="mb-4">
+              <label className="form-label fw-semibold text-dark small">New Password</label>
+              <div className="position-relative">
+                <Lock size={18} className="position-absolute top-50 start-0 translate-middle-y ms-3 text-muted" />
+                <input
+                  type="password"
+                  className="form-control auth-input ps-5"
+                  placeholder="Minimum 6 characters"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="d-flex justify-content-end gap-2">
+              <button
+                type="button"
+                className="btn btn-outline-secondary rounded-pill px-4"
+                onClick={() => setIsForgotModalOpen(false)}
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="btn btn-primary rounded-pill px-4 fw-semibold"
+                disabled={isForgotLoading}
+              >
+                {isForgotLoading ? 'Updating Password...' : 'Reset Password'}
+              </button>
+            </div>
+          </form>
+        )}
+      </Modal>
     </div>
   );
 }

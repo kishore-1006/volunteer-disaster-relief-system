@@ -4,7 +4,7 @@ import { ShieldAlert, User, Mail, Lock, Phone, MapPin, Briefcase, UserPlus, Eye,
 import { useApp } from '../context/AppContext';
 
 function Register() {
-  const { addVolunteer, login } = useApp();
+  const { register } = useApp();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -54,24 +54,23 @@ function Register() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
     setIsLoading(true);
-    setTimeout(() => {
-      addVolunteer({
-        name: formData.name,
-        email: formData.email,
-        phoneNumber: formData.phoneNumber,
-        skills: formData.skills,
-        availabilityStatus: 'AVAILABLE',
-        location: formData.location,
-        experienceYears: 1,
-      });
-      login(formData.email, formData.password);
-      setIsLoading(false);
+    const result = await register({
+      name: formData.name,
+      email: formData.email,
+      password: formData.password,
+      phoneNumber: formData.phoneNumber,
+      location: formData.location,
+      skills: formData.skills,
+      role: 'VOLUNTEER',
+    });
+    setIsLoading(false);
+    if (result && result.success) {
       navigate('/dashboard');
-    }, 800);
+    }
   };
 
   return (

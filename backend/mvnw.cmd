@@ -55,7 +55,34 @@ if exist "%MAVEN_PROJECTBASEDIR%\%MAVEN_CONFIG%" goto baseDirFound
 goto findBaseDir
 
 :baseDirFound
+if "%MAVEN_PROJECTBASEDIR:~-1%"=="\" set "MAVEN_PROJECTBASEDIR=%MAVEN_PROJECTBASEDIR:~0,-1%"
 
+@REM Detection and validation of JAVA_HOME and JAVACMD
+if defined JAVA_HOME goto findJavaFromJavaHome
+
+set JAVACMD=java.exe
+%JAVACMD% -version >nul 2>&1
+if %ERRORLEVEL% equ 0 goto checkWrapper
+
+echo.
+echo Error: JAVA_HOME is not defined correctly.
+echo We cannot execute %JAVACMD%
+echo.
+goto error
+
+:findJavaFromJavaHome
+set "JAVACMD=%JAVA_HOME%\bin\java.exe"
+if exist "%JAVACMD%" goto checkWrapper
+
+echo.
+echo Error: JAVA_HOME is set to an invalid directory.
+echo JAVA_HOME = "%JAVA_HOME%"
+echo Please set the JAVA_HOME variable in your environment to match the
+echo location of your Java installation.
+echo.
+goto error
+
+:checkWrapper
 set "WRAPPER_JAR=%MAVEN_PROJECTBASEDIR%\.mvn\wrapper\maven-wrapper.jar"
 set WRAPPER_LAUNCHER=org.apache.maven.wrapper.MavenWrapperMain
 
@@ -69,20 +96,19 @@ if not exist "%MAVEN_PROJECTBASEDIR%\.mvn\wrapper" mkdir "%MAVEN_PROJECTBASEDIR%
 powershell -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; (New-Object Net.WebClient).DownloadFile('%DOWNLOAD_URL%', '%WRAPPER_JAR%')"
 
 :run
-if not exist "%JAVACMD%" (
-  if defined JAVA_HOME (
-    set "JAVACMD=%JAVA_HOME%\bin\java.exe"
-  ) else (
-    set "JAVACMD=java.exe"
-  )
-)
-
 "%JAVACMD%" %MAVEN_OPTS% -classpath "%WRAPPER_JAR%" "-Dmaven.multiModuleProjectDirectory=%MAVEN_PROJECTBASEDIR%" %WRAPPER_LAUNCHER% %*
 if ERRORLEVEL 1 set ERROR_CODE=1
 
 goto end
 
+:error
+set ERROR_CODE=1
+
 :end
 @endlocal & set ERROR_CODE=%ERROR_CODE%
 
-if %ERROR_CODE%==0 exit /B 0 else exit /B %ERROR_CODE%
+if %ERROR_CODE%==0 (
+  exit /B 0
+) else (
+  exit /B %ERROR_CODE%
+)

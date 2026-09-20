@@ -40,6 +40,12 @@ export const authService = {
   login: (credentials) => api.post('/auth/login', credentials),
   register: (userData) => api.post('/auth/register', userData),
   getCurrentUser: () => api.get('/auth/me'),
+  forgotPassword: (data) => api.post('/auth/forgot-password', data),
+  resetPassword: (data) => api.post('/auth/reset-password', data),
+};
+
+export const userService = {
+  updateProfile: (data) => api.put('/users/me', data),
 };
 
 export const disasterService = {
@@ -80,6 +86,10 @@ export const taskService = {
   create: (data) => api.post('/tasks', data),
   update: (id, data) => api.put(`/tasks/${id}`, data),
   delete: (id) => api.delete(`/tasks/${id}`),
+};
+
+export const dashboardService = {
+  getStats: () => api.get('/dashboard/stats'),
 };
 
 export default api;

@@ -10,6 +10,7 @@ import Volunteer from "./pages/Volunteer";
 import Disaster from "./pages/Disaster";
 import Shelter from "./pages/Shelter";
 import Donation from "./pages/Donation";
+import Task from "./pages/Task";
 import Profile from "./pages/Profile";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
@@ -31,6 +32,7 @@ function App() {
           <Route path="/disaster" element={<ProtectedRoute><Disaster /></ProtectedRoute>} />
           <Route path="/shelter" element={<ProtectedRoute><Shelter /></ProtectedRoute>} />
           <Route path="/donation" element={<ProtectedRoute><Donation /></ProtectedRoute>} />
+          <Route path="/task" element={<ProtectedRoute><Task /></ProtectedRoute>} />
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           <Route path="*" element={<NotFound />} />
         </Routes>

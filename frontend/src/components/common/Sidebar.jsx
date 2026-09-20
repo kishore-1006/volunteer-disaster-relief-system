@@ -18,7 +18,7 @@ const Sidebar = () => {
     { label: 'Volunteer Roster', path: '/volunteer', icon: Users },
     { label: 'Shelters & Camps', path: '/shelter', icon: Home },
     { label: 'Donations & Supplies', path: '/donation', icon: HeartHandshake },
-    { label: 'Relief Dispatch Tasks', path: '/dashboard', icon: CheckSquare },
+    { label: 'Relief Dispatch Tasks', path: '/task', icon: CheckSquare },
     { label: 'My Profile', path: '/profile', icon: User },
   ];
 

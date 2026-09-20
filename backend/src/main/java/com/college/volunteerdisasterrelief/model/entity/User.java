@@ -36,6 +36,10 @@ public class User {
 
     private String phoneNumber;
 
+    private String resetToken;
+
+    private LocalDateTime resetTokenExpiry;
+
     private LocalDateTime createdAt;
 
     @PrePersist

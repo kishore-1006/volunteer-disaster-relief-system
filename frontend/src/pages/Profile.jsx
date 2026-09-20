@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   User, Mail, Phone, MapPin, Briefcase, Calendar, Shield,
@@ -6,14 +6,43 @@ import {
 } from 'lucide-react';
 import Navbar from '../components/common/Navbar';
 import Sidebar from '../components/common/Sidebar';
+import Modal from '../components/ui/Modal';
 import { useApp } from '../context/AppContext';
 
 function Profile() {
-  const { user, volunteers, donations, tasks, disasters, logout, isAuthenticated } = useApp();
+  const { user, volunteers, donations, tasks, disasters, logout, updateUserProfile } = useApp();
   const navigate = useNavigate();
 
   // Try to find matching volunteer record for extra data
   const volunteerRecord = volunteers.find(v => v.email === user?.email) || volunteers[0] || {};
+
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editFormData, setEditFormData] = useState({
+    name: '',
+    email: '',
+    phoneNumber: '',
+    location: '',
+    role: '',
+  });
+
+  const handleOpenEditModal = () => {
+    setEditFormData({
+      name: user?.name || volunteerRecord.name || 'Coordinator',
+      email: user?.email || volunteerRecord.email || 'admin@reliefnet.org',
+      phoneNumber: user?.phoneNumber || volunteerRecord.phoneNumber || '+91 98765 43210',
+      location: volunteerRecord.location || 'Mumbai, Maharashtra',
+      role: user?.role || 'ADMIN',
+    });
+    setIsEditModalOpen(true);
+  };
+
+  const handleSaveProfile = async (e) => {
+    e.preventDefault();
+    if (updateUserProfile) {
+      await updateUserProfile(editFormData);
+    }
+    setIsEditModalOpen(false);
+  };
 
   const completedTasks = tasks.filter(t => t.status === 'COMPLETED').length;
   const inProgressTasks = tasks.filter(t => t.status === 'IN_PROGRESS').length;
@@ -30,7 +59,7 @@ function Profile() {
   const personalInfo = [
     { label: 'Full Name', value: user?.name || volunteerRecord.name || 'Coordinator', icon: User },
     { label: 'Email', value: user?.email || volunteerRecord.email || 'admin@reliefnet.org', icon: Mail },
-    { label: 'Phone', value: volunteerRecord.phoneNumber || '+91 98765 43210', icon: Phone },
+    { label: 'Phone', value: user?.phoneNumber || volunteerRecord.phoneNumber || '+91 98765 43210', icon: Phone },
     { label: 'Location', value: volunteerRecord.location || 'Mumbai, Maharashtra', icon: MapPin },
     { label: 'Skills', value: volunteerRecord.skills || 'Operations Management, Leadership', icon: Briefcase },
     { label: 'Experience', value: `${volunteerRecord.experienceYears || 5} Years`, icon: Calendar },
@@ -62,7 +91,10 @@ function Profile() {
               <p className="page-subtitle">View and manage your volunteer profile information</p>
             </div>
             <div className="d-flex gap-2">
-              <button className="btn btn-outline-primary rounded-pill px-3 fw-semibold d-flex align-items-center gap-2 shadow-sm">
+              <button
+                className="btn btn-outline-primary rounded-pill px-3 fw-semibold d-flex align-items-center gap-2 shadow-sm"
+                onClick={handleOpenEditModal}
+              >
                 <Edit3 size={16} />
                 Edit Profile
               </button>
@@ -162,7 +194,10 @@ function Profile() {
                 <User size={18} className="text-primary" />
                 Personal Information
               </h5>
-              <button className="btn btn-sm btn-outline-primary rounded-pill px-3 d-flex align-items-center gap-1">
+              <button
+                className="btn btn-sm btn-outline-primary rounded-pill px-3 d-flex align-items-center gap-1"
+                onClick={handleOpenEditModal}
+              >
                 <Edit3 size={14} />
                 Edit
               </button>
@@ -214,6 +249,81 @@ function Profile() {
               ))}
             </div>
           </div>
+
+          {/* Edit Profile Modal */}
+          <Modal
+            isOpen={isEditModalOpen}
+            onClose={() => setIsEditModalOpen(false)}
+            title="Edit Profile Details"
+          >
+            <form onSubmit={handleSaveProfile}>
+              <div className="mb-3">
+                <label className="form-label fw-semibold text-dark small">Full Name</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={editFormData.name}
+                  onChange={(e) => setEditFormData({ ...editFormData, name: e.target.value })}
+                  required
+                />
+              </div>
+
+              <div className="mb-3">
+                <label className="form-label fw-semibold text-dark small">Email Address (Read-only)</label>
+                <input
+                  type="email"
+                  className="form-control bg-light text-muted"
+                  value={editFormData.email}
+                  readOnly
+                  disabled
+                />
+              </div>
+
+              <div className="mb-3">
+                <label className="form-label fw-semibold text-dark small">Phone Number</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={editFormData.phoneNumber}
+                  onChange={(e) => setEditFormData({ ...editFormData, phoneNumber: e.target.value })}
+                />
+              </div>
+
+              <div className="mb-3">
+                <label className="form-label fw-semibold text-dark small">Location</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={editFormData.location}
+                  onChange={(e) => setEditFormData({ ...editFormData, location: e.target.value })}
+                />
+              </div>
+
+              <div className="mb-3">
+                <label className="form-label fw-semibold text-dark small">Role (Read-only)</label>
+                <input
+                  type="text"
+                  className="form-control bg-light text-muted"
+                  value={editFormData.role}
+                  readOnly
+                  disabled
+                />
+              </div>
+
+              <div className="d-flex justify-content-end gap-2 mt-4 pt-2 border-top">
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary rounded-pill px-4"
+                  onClick={() => setIsEditModalOpen(false)}
+                >
+                  Cancel
+                </button>
+                <button type="submit" className="btn btn-primary rounded-pill px-4 fw-semibold">
+                  Save Changes
+                </button>
+              </div>
+            </form>
+          </Modal>
         </main>
       </div>
     </>

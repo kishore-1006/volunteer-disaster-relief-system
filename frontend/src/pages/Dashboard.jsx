@@ -9,23 +9,22 @@ import { useApp } from '../context/AppContext';
 import { formatCurrency } from '../utils/formatters';
 
 function Dashboard() {
-  const { disasters, volunteers, shelters, donations, tasks } = useApp();
+  const { dashboardStats, dashboardLoading, dashboardError, shelters } = useApp();
 
-  // Compute stats
-  const activeDisasters = disasters.filter(d => d.status === 'ACTIVE').length;
-  const availableVolunteers = volunteers.filter(v => v.availabilityStatus === 'AVAILABLE').length;
-  const openShelters = shelters.filter(s => s.status === 'OPEN').length;
-  const totalDonationAmount = donations
-    .filter(d => d.donationType === 'MONEY')
-    .reduce((sum, d) => sum + (d.amountOrQuantity || 0), 0);
+  // ── Computed stats: prefer backend aggregated data, fall back to 0 ─────────
+  const activeDisasters   = dashboardStats?.activeDisasters   ?? 0;
+  const totalDisasters    = dashboardStats?.totalDisasters     ?? 0;
+  const availableVolunteers = dashboardStats?.availableVolunteers ?? 0;
+  const totalVolunteers   = dashboardStats?.totalVolunteers    ?? 0;
+  const openShelters      = dashboardStats?.openShelters       ?? 0;
+  const totalCapacity     = dashboardStats?.totalCapacity      ?? 0;
+  const totalOccupancy    = dashboardStats?.totalOccupancy     ?? 0;
+  const occupancyPercent  = dashboardStats?.occupancyPercent   ?? 0;
+  const totalDonationAmount = dashboardStats?.totalDonationAmount ?? 0;
+  const totalDonationsCount = dashboardStats?.totalDonationsCount ?? 0;
 
-  // Chart data — donations by type
-  const donationTypeData = donations.reduce((acc, d) => {
-    const type = d.donationType || 'OTHER';
-    acc[type] = (acc[type] || 0) + 1;
-    return acc;
-  }, {});
-
+  // ── Donation breakdown chart ───────────────────────────────────────────────
+  const donationTypeData = dashboardStats?.donationTypeBreakdown ?? {};
   const chartBars = Object.entries(donationTypeData).map(([type, count]) => {
     const colorMap = {
       MONEY: '#16a34a',
@@ -33,24 +32,19 @@ function Dashboard() {
       FOOD_PACKS: '#d97706',
     };
     return {
-      label: type.replace('_', ' '),
+      label: type.replace(/_/g, ' '),
       value: count,
-      color: colorMap[type] || '#64748b'
+      color: colorMap[type] || '#64748b',
     };
   });
+  const maxChartValue = Math.max(...chartBars.map((b) => b.value), 1);
 
-  const maxChartValue = Math.max(...chartBars.map(b => b.value), 1);
+  // ── Task status breakdown ──────────────────────────────────────────────────
+  const taskStatusCounts = dashboardStats?.taskStatusCounts ?? {};
 
-  // Task status breakdown
-  const taskStatusCounts = tasks.reduce((acc, t) => {
-    acc[t.status] = (acc[t.status] || 0) + 1;
-    return acc;
-  }, {});
-
-  // Shelter occupancy stats
-  const totalCapacity = shelters.reduce((s, sh) => s + (sh.capacity || 0), 0);
-  const totalOccupancy = shelters.reduce((s, sh) => s + (sh.currentOccupancy || 0), 0);
-  const occupancyPercent = totalCapacity > 0 ? Math.round((totalOccupancy / totalCapacity) * 100) : 0;
+  // ── Shelter rows for the per-shelter occupancy label row ──────────────────
+  // Use raw shelters list from context for the individual-shelter labels at the bottom
+  const shelterRows = shelters.slice(0, 4);
 
   return (
     <>
@@ -65,12 +59,28 @@ function Dashboard() {
               <p className="page-subtitle">Real-time overview of all disaster relief operations</p>
             </div>
             <div className="d-flex align-items-center gap-2">
-              <span className="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-2 d-flex align-items-center gap-1 small">
-                <span className="spinner-grow spinner-grow-sm text-success" role="status" aria-hidden="true" style={{ width: '8px', height: '8px' }}></span>
-                System Online
-              </span>
+              {dashboardLoading && (
+                <span className="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill px-3 py-2 d-flex align-items-center gap-1 small">
+                  <span className="spinner-grow spinner-grow-sm text-warning" role="status" aria-hidden="true" style={{ width: '8px', height: '8px' }}></span>
+                  Refreshing...
+                </span>
+              )}
+              {!dashboardLoading && (
+                <span className="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-2 d-flex align-items-center gap-1 small">
+                  <span className="spinner-grow spinner-grow-sm text-success" role="status" aria-hidden="true" style={{ width: '8px', height: '8px' }}></span>
+                  System Online
+                </span>
+              )}
             </div>
           </div>
+
+          {/* API Error Banner — shown without breaking layout */}
+          {dashboardError && (
+            <div className="alert alert-warning d-flex align-items-center gap-2 py-2 px-3 mb-3 small rounded-3" role="alert">
+              <span>⚠️</span>
+              <span>{dashboardError}</span>
+            </div>
+          )}
 
           {/* Stat Cards Row */}
           <div className="row g-4 mb-4 animate-fade-in">
@@ -80,7 +90,7 @@ function Dashboard() {
                 value={activeDisasters}
                 icon={Flame}
                 color="danger"
-                change={`${disasters.length} total`}
+                change={`${totalDisasters} total`}
                 changeType="negative"
                 subtitle="Incidents requiring attention"
               />
@@ -91,7 +101,7 @@ function Dashboard() {
                 value={availableVolunteers}
                 icon={Users}
                 color="primary"
-                change={`${volunteers.length} registered`}
+                change={`${totalVolunteers} registered`}
                 changeType="positive"
                 subtitle="Available for deployment"
               />
@@ -113,7 +123,7 @@ function Dashboard() {
                 value={formatCurrency(totalDonationAmount)}
                 icon={HeartHandshake}
                 color="success"
-                change={`${donations.length} donations`}
+                change={`${totalDonationsCount} donations`}
                 changeType="positive"
                 subtitle="Monetary contributions"
               />
@@ -136,20 +146,24 @@ function Dashboard() {
                 </div>
 
                 <div className="mini-chart-container" style={{ paddingBottom: '30px' }}>
-                  {chartBars.map((bar, idx) => (
+                  {chartBars.length > 0 ? chartBars.map((bar, idx) => (
                     <div
                       key={idx}
                       className="chart-bar"
                       style={{
                         height: `${(bar.value / maxChartValue) * 100}%`,
                         backgroundColor: bar.color,
-                        minHeight: '20px'
+                        minHeight: '20px',
                       }}
                     >
                       <span className="chart-bar-value">{bar.value}</span>
                       <span className="chart-bar-label">{bar.label}</span>
                     </div>
-                  ))}
+                  )) : (
+                    <div className="d-flex align-items-center justify-content-center h-100 text-muted small">
+                      {dashboardLoading ? 'Loading...' : 'No donation data yet'}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -167,16 +181,16 @@ function Dashboard() {
                   <h6 className="text-muted small fw-bold text-uppercase mb-3" style={{ letterSpacing: '0.05em' }}>Relief Tasks</h6>
                   <div className="d-flex flex-column gap-2">
                     {[
-                      { label: 'Completed', key: 'COMPLETED', color: 'bg-success' },
+                      { label: 'Completed',  key: 'COMPLETED',  color: 'bg-success' },
                       { label: 'In Progress', key: 'IN_PROGRESS', color: 'bg-primary' },
-                      { label: 'Pending', key: 'PENDING', color: 'bg-warning' }
-                    ].map(item => (
+                      { label: 'Pending',    key: 'PENDING',    color: 'bg-warning' },
+                    ].map((item) => (
                       <div key={item.key} className="d-flex align-items-center justify-content-between">
                         <div className="d-flex align-items-center gap-2">
                           <span className={`${item.color} rounded-circle d-inline-block`} style={{ width: '10px', height: '10px' }}></span>
                           <span className="small text-dark fw-medium">{item.label}</span>
                         </div>
-                        <span className="fw-bold text-dark">{taskStatusCounts[item.key] || 0}</span>
+                        <span className="fw-bold text-dark">{taskStatusCounts[item.key] ?? 0}</span>
                       </div>
                     ))}
                   </div>
@@ -198,12 +212,12 @@ function Dashboard() {
                           ? 'linear-gradient(90deg, #dc2626, #ef4444)'
                           : occupancyPercent > 50
                             ? 'linear-gradient(90deg, #d97706, #f59e0b)'
-                            : 'linear-gradient(90deg, #16a34a, #22c55e)'
+                            : 'linear-gradient(90deg, #16a34a, #22c55e)',
                       }}
                     ></div>
                   </div>
                   <div className="d-flex justify-content-between mt-2">
-                    {shelters.map(s => (
+                    {shelterRows.map((s) => (
                       <span key={s.id} className="small text-muted" style={{ fontSize: '0.7rem' }}>
                         {s.name.split(' ')[0]}: {s.currentOccupancy}/{s.capacity}
                       </span>
